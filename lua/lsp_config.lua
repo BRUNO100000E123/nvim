@@ -19,8 +19,6 @@ lsp_config.bashls.setup({capabilities = capabilities,})
 lsp_config.lemminx.setup({capabilities = capabilities,})
 lsp_config.biome.setup({capabilities = capabilities,})
 
-local root_markers = {".git","mvnw","gradlew","pom.xml","build.gradle"}
-require('jdtls.setup').find_root(root_markers)
 local workspace_dir = vim.fn.stdpath('data') .. '/site/java/workspace-root/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 os.execute("mkdir " .. workspace_dir)
 
