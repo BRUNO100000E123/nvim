@@ -59,7 +59,7 @@ require("lazy").setup({
         'Yggdroot/indentLine'
     },
     {
-        'j-morano/buffer_manager.nvim'
+    --     'j-morano/buffer_manager.nvim'
     },
     {
         'mfussenegger/nvim-jdtls'

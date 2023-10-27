@@ -52,3 +52,9 @@ vim.api.nvim_create_autocmd('FileType',
         command = 'highlight CursorLine guifg=#e3ff00 guibg=#1C00FF'
     }
 )
+-- vim.api.nvim_create_autocmd('BufEnter', 
+--     {
+--         pattern = 'buffers_view',
+--         command = 'highlight CursorLine guifg=#e3ff00 guibg=#1C00FF'
+--     }
+-- )
