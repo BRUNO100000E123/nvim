@@ -8,51 +8,55 @@ vim.api.nvim_set_keymap('n', '<C-d>', ':lua Cycle_ahead()<CR>', {noremap = true,
 vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>:lua Cycle_behind()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-d>', '<Esc>:lua Cycle_ahead()<CR>', {noremap = true, silent = true})
 
-function Cycle_behind()
-    
+function Cycle_b()
+
     Reload()
 
-    vim.cmd('b ' .. (function ()
+    for index, buffer in ipairs(Buffers_in_memory) do
 
-        for index, buffer in ipairs(Buffers_in_memory) do
+        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == 1 then
 
-            if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == 1 then
-                
-                return string.match(Buffers_in_memory[#Buffers_in_memory], '(%d*) :')
+            return string.match(Buffers_in_memory[#Buffers_in_memory], '(%d*) :')
 
-            elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
-        
-                return string.match(Buffers_in_memory[(index - 1)], '(%d*) :')
+        elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
 
-            end
+            return string.match(Buffers_in_memory[(index - 1)], '(%d*) :')
 
         end
+
+    end
+
+end
+
+function Cycle_a()
+
+    Reload()
         
-    end))
+    for index, buffer in ipairs(Buffers_in_memory) do
     
+        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == #Buffers_in_memory then
+            
+            return '1'
+
+        elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
+    
+            return string.match(Buffers_in_memory[(index + 1)], '(%d*) :')
+
+        end
+
+    end
+    
+end
+
+function Cycle_behind()
+
+    vim.cmd('b ' .. Cycle_b())
+
 end
 
 function Cycle_ahead()
 
-    Reload()
-
-    vim.cmd('b ' .. function ()
-        
-        for index, buffer in ipairs(Buffers_in_memory) do
-        
-            if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == #Buffers_in_memory then
-                
-                return '1'
-    
-            elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
-        
-                return string.match(Buffers_in_memory[(index + 1)], '(%d*) :')
-    
-            end
-    
-        end
-
-    end)
+    vim.cmd('b ' ..  Cycle_a())
     
 end
 

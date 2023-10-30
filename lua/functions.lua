@@ -90,7 +90,7 @@ function Push()
 end
 
 function Build()
-    
+
     local path = vim.api.nvim_buf_get_name(0)
 
     if string.find(path, 'microservicos') then
@@ -110,8 +110,9 @@ function Build()
                 '&& ./mvnw clean install -DskipTests ' ..
                 '&& cd ' .. microservice_name .. '-server ' ..
                 '&& ./mvnw spring-boot:build-image -DskipTests -Pnative -Dspring-boot.build-image.imageName=' .. application_name .. ' ' ..
-                '&& exit'
+                '&& docker run ' .. application_name
             )
+
         end
 
     end

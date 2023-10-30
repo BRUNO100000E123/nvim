@@ -39,7 +39,6 @@ require("lazy").setup({
         'williamboman/mason.nvim',
         dependencies = {
             'williamboman/mason-lspconfig',
-            -- 'mfussenegger/nvim-jdtls'
        }
     },
     {
@@ -59,12 +58,12 @@ require("lazy").setup({
         'Yggdroot/indentLine'
     },
     {
-    --     'j-morano/buffer_manager.nvim'
-    },
-    {
         'mfussenegger/nvim-jdtls'
     },
     {
         'numToStr/Comment.nvim',
+    },
+    {
+        'mpx/lua-cjson'
     }
 })
