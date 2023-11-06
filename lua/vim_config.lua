@@ -18,13 +18,13 @@ vim.api.nvim_set_hl(0, 'LineNrAbove', {fg='#7fcbd7', bold = true})
 vim.api.nvim_set_hl(0, 'LineNr', {fg='#857ebb', bold = true})
 vim.api.nvim_set_hl(0, 'LineNrBelow', {fg='#ca9dd7', bold = true})
 
-vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%%%= 0‼️  0⚠️  0ⓘ  0💡 %y %-.30t'
+vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%% %-m %= 0‼️  0⚠️  0ⓘ  0💡 %y %-.30t'
 
 function Change_to_tree_color()
 
     vim.cmd('highlight CursorLine guifg=#e3ff00 guibg=#1C00FF')
 
-end 
+end
 
 function Change_status_line_color()
 
@@ -46,15 +46,9 @@ end
 
 vim.api.nvim_create_autocmd('BufWrite', {command = 'lua Diagnostics_status_bar()'})
 vim.api.nvim_create_autocmd('ModeChanged', {command = 'lua Change_status_line_color()'})
-vim.api.nvim_create_autocmd('FileType', 
+vim.api.nvim_create_autocmd('BufEnter',
     {
-        pattern = 'NvimTree',
+        pattern = 'NvimTree_1',
         command = 'highlight CursorLine guifg=#e3ff00 guibg=#1C00FF'
     }
 )
--- vim.api.nvim_create_autocmd('BufEnter', 
---     {
---         pattern = 'buffers_view',
---         command = 'highlight CursorLine guifg=#e3ff00 guibg=#1C00FF'
---     }
--- )

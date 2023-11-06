@@ -5,7 +5,7 @@ vim.api.nvim_set_keymap('i', 'vv', '<Esc>v', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', 'nn', '<Esc>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', 'bb', '<Esc><C-v>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w!<CR> i', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', '(', '<Esc>:lua AddParenteses()<CR>i', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '(', '()', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '[', '[]', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '{', '{}', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '"', '""', {noremap = true, silent = true})
@@ -82,9 +82,9 @@ vim.api.nvim_set_keymap('n', 'push', ':lua Push()<CR>', {noremap = true, silent 
 --LEADER STUFF   
 vim.api.nvim_set_keymap('n', '<leader>l', ':Lazy<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>k', ':Mason<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>j', ':lua LocalCommit()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>h', ':Telescope find_files<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>g', ':Telescope find_files hidden=true no_ignore=true<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>j', ':Telescope find_files<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>h', ':Telescope find_files hidden=true no_ignore=true<CR>', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('n', '<leader>g', ':Telescope find_files hidden=true no_ignore=true<CR>', {noremap = true, silent = true})
 
 --LSP STUFF
 vim.api.nvim_set_keymap('n', 'imp', ':lua vim.lsp.buf.implementation()<CR>', {noremap = true, silent = true})

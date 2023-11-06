@@ -14,7 +14,7 @@ function Cycle_b()
 
     for index, buffer in ipairs(Buffers_in_memory) do
 
-        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == 1 then
+        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == 3 then
 
             return string.match(Buffers_in_memory[#Buffers_in_memory], '(%d*) :')
 
@@ -36,7 +36,7 @@ function Cycle_a()
     
         if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == #Buffers_in_memory then
             
-            return '1'
+            return string.match(Buffers_in_memory[3], '(%d*) :')
 
         elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
     
@@ -45,7 +45,7 @@ function Cycle_a()
         end
 
     end
-    
+
 end
 
 function Cycle_behind()
@@ -57,7 +57,7 @@ end
 function Cycle_ahead()
 
     vim.cmd('b ' ..  Cycle_a())
-    
+
 end
 
 function Chosen_buffer()
@@ -105,13 +105,13 @@ function Open_window()
 
     return vim.api.nvim_open_win(Buffer, true, {
         relative = 'editor',
+        anchor = 'NW',
         width = 50,
         height = 50,
-        row = 1,
-        col = vim.fn.winwidth(0) - 40,
+        row = 0,
+        col = 0,
         focusable = true,
-        style = 'minimal',
-        border = 'double',
+        border =  { '╭', "━" ,'╮', "┃", "╯", "━", "╰", "┃" },
     })
 
 end
@@ -158,7 +158,10 @@ end
 
 function Reload()
 
-    Buffers_in_memory = {}
+    Buffers_in_memory = {
+        '                      Buffers                     ',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+    }
 
     local buffers_info = vim.fn.getbufinfo({ buflisted = 1 })
 
@@ -173,5 +176,20 @@ function Reload()
     end
 
     vim.api.nvim_buf_set_lines(Buffer, 0, -1, false, Buffers_in_memory)
-    
+
 end
+
+function Reload_window()
+    vim.cmd('highlight CursorLine guibg=#171717 guifg=#ca9dd7')
+    vim.cmd('setlocal nonumber norelativenumber')
+    vim.cmd('highlight CustomChar guifg=#7fcbd7')
+    vim.cmd('syntax match CustomChar /./')
+    vim.cmd('highlight link CustomChar SpecialChar')
+end
+
+vim.api.nvim_create_autocmd('BufEnter',
+    {
+        pattern = 'buffers_view',
+        command = 'lua Reload_window()'
+    }
+)

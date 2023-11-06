@@ -26,7 +26,7 @@ require('nvim-treesitter.configs').setup({
             enable = true
         },
     },
-    ensure_installed = {'java', 'lua', 'bash', 'python'},
+    ensure_installed = {'java', 'lua', 'bash', 'python', 'javascript', 'vue'},
     context_commentstring = {
         enable = true,
         enable_autocmd = false

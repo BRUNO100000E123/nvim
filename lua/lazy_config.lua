@@ -52,18 +52,9 @@ require("lazy").setup({
         }
     },
     {
-        'mg979/vim-visual-multi'
-    },
-    {
         'Yggdroot/indentLine'
-    },
-    {
-        'mfussenegger/nvim-jdtls'
     },
     {
         'numToStr/Comment.nvim',
     },
-    {
-        'mpx/lua-cjson'
-    }
 })
