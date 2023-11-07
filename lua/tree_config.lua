@@ -56,11 +56,11 @@ require("nvim-tree").setup({
     icons = {
       web_devicons = {
         file = {
-          enable = false,
+          enable = true,
           color = true,
         },
         folder = {
-          enable = false,
+          enable = true,
           color = true,
         },
       },
@@ -76,31 +76,32 @@ require("nvim-tree").setup({
           empty_open = "📂",
           symlink = "I",
           symlink_open = "J",
-        },
-        git = {
-          unstaged = "🔴",
-          staged = "🟡",
-          unmerged = "🟢",
-          renamed = "R",
-          untracked = "N",
-          deleted = "O",
-          ignored = "I",
-        },
-      },
+        }
+      }
+    --     git = {
+    --       unstaged = "🔴",
+    --       staged = "🟡",
+    --       unmerged = "🟢",
+    --       renamed = "R",
+    --       untracked = "N",
+    --       deleted = "O",
+    --       ignored = "I",
+    --     },
+    --   },
     },
   },
-  diagnostics = {
-    enable = true,
-    show_on_dirs = true,
-    icons = {
-      hint = "🔵",
-      info = "🟣",
-      warning = "🟡",
-      error = "🔴",
-    },
-  }, 
+  -- diagnostics = {
+  --   enable = true,
+  --   show_on_dirs = true,
+  --   icons = {
+  --     hint = "🔵",
+  --     info = "🟣",
+  --     warning = "🟡",
+  --     error = "🔴",
+  --   },
+  -- }, 
   view = {
-    width = 60,
+    width = 40,
     side = "left",
   },
   filters = {

@@ -1,62 +1,58 @@
-Buffer = nil
+Buffer_view_buffer_list = nil
 Buffers_in_memory = {}
 
-vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<C-w>', ':lua Open_window()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-w>', ':lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-a>', ':lua Cycle_behind()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-d>', ':lua Cycle_ahead()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>:lua Cycle_behind()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-d>', '<Esc>:lua Cycle_ahead()<CR>', {noremap = true, silent = true})
 
-function Cycle_b()
+function Cycle_behind()
 
-    Reload()
+    local buffer_name = ''
+
+    Reload_window_buffers_view()
 
     for index, buffer in ipairs(Buffers_in_memory) do
 
         if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == 3 then
 
-            return string.match(Buffers_in_memory[#Buffers_in_memory], '(%d*) :')
+            buffer_name = string.match(Buffers_in_memory[#Buffers_in_memory], '(%d*) :')
 
         elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
 
-            return string.match(Buffers_in_memory[(index - 1)], '(%d*) :')
+            buffer_name = string.match(Buffers_in_memory[(index - 1)], '(%d*) :')
 
         end
 
     end
 
-end
-
-function Cycle_a()
-
-    Reload()
-        
-    for index, buffer in ipairs(Buffers_in_memory) do
-    
-        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == #Buffers_in_memory then
-            
-            return string.match(Buffers_in_memory[3], '(%d*) :')
-
-        elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
-    
-            return string.match(Buffers_in_memory[(index + 1)], '(%d*) :')
-
-        end
-
-    end
-
-end
-
-function Cycle_behind()
-
-    vim.cmd('b ' .. Cycle_b())
+    vim.cmd('b' .. buffer_name)
 
 end
 
 function Cycle_ahead()
 
-    vim.cmd('b ' ..  Cycle_a())
+    local buffer_name = ''
+
+    Reload_window_buffers_view()
+
+    for index, buffer in ipairs(Buffers_in_memory) do
+
+        if tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) and index == #Buffers_in_memory then
+
+            buffer_name = string.match(Buffers_in_memory[3], '(%d*) :')
+
+        elseif tonumber(string.match(buffer, '(%d*) :')) == tonumber(vim.fn.bufnr('%')) then
+
+            buffer_name = string.match(Buffers_in_memory[(index + 1)], '(%d*) :')
+
+        end
+
+    end
+
+    vim.cmd('b' .. buffer_name)
 
 end
 
@@ -75,35 +71,35 @@ function Open_buffer()
     vim.cmd('q!')
 
     vim.cmd('b ' .. buffer_number)
-    
+
 end
 
-function Delete_buffer() 
+function Delete_buffer()
 
     vim.cmd(':bdelete ' .. Chosen_buffer())
 
-    Reload()
+    Reload_window_buffers_view()
 
 end
 
-function Open_window()
+function Open_window_buffers_view()
 
-    if Buffer == nil then
+    if Buffer_view_buffer_list == nil then
 
-        Buffer = vim.api.nvim_create_buf(false, true)
+        Buffer_view_buffer_list = vim.api.nvim_create_buf(false, true)
 
-        vim.api.nvim_buf_set_name(Buffer, "buffers_view")
+        vim.api.nvim_buf_set_name(Buffer_view_buffer_list, "buffers_view")
 
-        vim.api.nvim_buf_set_keymap(Buffer, 'n', 'll', ':q!<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(Buffer, 'n', '<C-w>', ':q!<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(Buffer, 'n', 'dd', ':lua Delete_buffer()<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(Buffer, 'n', 'hh', ':lua Open_buffer()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_buffer_list, 'n', 'll', ':q!<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_buffer_list, 'n', '<C-w>', ':q!<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_buffer_list, 'n', 'dd', ':lua Delete_buffer()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_buffer_list, 'n', 'hh', ':lua Open_buffer()<CR>', { noremap = true, silent = true })
 
     end
 
-    Reload()
+    Reload_window_buffers_view()
 
-    return vim.api.nvim_open_win(Buffer, true, {
+    return vim.api.nvim_open_win(Buffer_view_buffer_list, true, {
         relative = 'editor',
         anchor = 'NW',
         width = 50,
@@ -120,15 +116,11 @@ function Diagnostics_buffer(buffer)
 
     local errossera = vim.diagnostic.get(buffer, { severity = {
         vim.diagnostic.severity.ERROR,
-        vim.diagnostic.severity.WARN,
-        vim.diagnostic.severity.INFO,
-        vim.diagnostic.severity.HINT
+        vim.diagnostic.severity.WARN
     } })
 
     local errors = 0
     local warnings = 0
-    local informations = 0
-    local hints = 0
 
     for _, diagnostic in ipairs(errossera) do
 
@@ -136,27 +128,23 @@ function Diagnostics_buffer(buffer)
             errors = errors + 1
         elseif diagnostic.severity == 2 then
             warnings = warnings + 1
-        elseif diagnostic.severity == 3 then
-            informations = informations + 1
-        elseif diagnostic.severity == 4 then
-            hints = hints + 1
         end
 
     end
 
-    if errors == 0 and warnings == 0 and informations == 0 and hints == 0 then
+    if errors == 0 and warnings == 0 then
 
         return '⭐'
 
     else
 
-        return tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️  ' .. tostring(informations) .. 'ⓘ  ' .. tostring(hints) .. '💡'
+        return tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️'
 
     end
 
 end
 
-function Reload()
+function Reload_window_buffers_view()
 
     Buffers_in_memory = {
         '                      Buffers                     ',
@@ -167,19 +155,25 @@ function Reload()
 
     for _, info in ipairs(buffers_info) do
 
-        local buffer_name = string.match(vim.fn.bufname(info.name), '/(%w*)([_]*)(%w*)%.')
+        local path = vim.fn.bufname(info.name)
 
-        if buffer_name ~= nil then
-            table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. buffer_name .. ' : ' .. Diagnostics_buffer(info.bufnr)))
+        if path ~= nil and path ~= '' then
+
+            path = vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"')
+
+            if path ~= nil then
+                table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"'):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
+            end
+
         end
 
     end
 
-    vim.api.nvim_buf_set_lines(Buffer, 0, -1, false, Buffers_in_memory)
+    vim.api.nvim_buf_set_lines(Buffer_view_buffer_list, 0, -1, false, Buffers_in_memory)
 
 end
 
-function Reload_window()
+function Recolor_window_buffers_view()
     vim.cmd('highlight CursorLine guibg=#171717 guifg=#ca9dd7')
     vim.cmd('setlocal nonumber norelativenumber')
     vim.cmd('highlight CustomChar guifg=#7fcbd7')
@@ -187,9 +181,4 @@ function Reload_window()
     vim.cmd('highlight link CustomChar SpecialChar')
 end
 
-vim.api.nvim_create_autocmd('BufEnter',
-    {
-        pattern = 'buffers_view',
-        command = 'lua Reload_window()'
-    }
-)
+vim.api.nvim_create_autocmd('BufEnter',{pattern = 'buffers_view', command = 'lua Recolor_window_buffers_view()'})

@@ -1,3 +1,21 @@
+local telescope = require('telescope.builtin')
+
+function Find_files_local()
+
+    local name = vim.api.nvim_buf_get_name(0)
+
+    if string.find(name, 'microservicos') then
+
+        Path_global = '/home/bruno/dev/java/link-dev/microservicos/' .. string.match(name, '/home/bruno/dev/java/link%-dev/microservicos/((%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?))') .. '/'
+
+    end
+    telescope.find_files({
+        prompt_title = 'files',
+        cwd = Path_global
+    })
+
+end
+
 Path_global = '/home/bruno/dev/java/link-dev/microservicos/'
 
 function Diagnostics_status_bar()
@@ -27,7 +45,7 @@ function Diagnostics_status_bar()
         end
     end
 
-    vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%%%=%y ' .. tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️  ' .. tostring(informations) .. 'ⓘ  ' .. tostring(hints) .. '💡  '  .. '  %-.30t'
+    vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%%%=%y ' .. tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️  ' .. tostring(informations) .. '   ' .. tostring(hints) .. '💡  '  .. '  %-.30t'
 
 end
 

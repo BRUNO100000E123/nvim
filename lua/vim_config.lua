@@ -18,7 +18,7 @@ vim.api.nvim_set_hl(0, 'LineNrAbove', {fg='#7fcbd7', bold = true})
 vim.api.nvim_set_hl(0, 'LineNr', {fg='#857ebb', bold = true})
 vim.api.nvim_set_hl(0, 'LineNrBelow', {fg='#ca9dd7', bold = true})
 
-vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%% %-m %= 0‼️  0⚠️  0ⓘ  0💡 %y %-.30t'
+vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%% %-m %= 0‼️  0⚠️  0   0💡 %y %-.30t'
 
 function Change_to_tree_color()
 

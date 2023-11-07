@@ -106,6 +106,8 @@ lsp_config.jdtls.setup({
         allow_incremental_sync = true,
     },
     init_options = {
-        bundles = {},
+        bundles = {
+            vim.fn.glob('/home/bruno/Downloads/java-debug-main/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.50.0.jar')
+        },
     },
 })

@@ -43,6 +43,7 @@ require("lazy").setup({
     },
     {
         'kyazdani42/nvim-tree.lua',
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
     },
     {
     	'nvim-treesitter/nvim-treesitter',
@@ -57,4 +58,11 @@ require("lazy").setup({
     {
         'numToStr/Comment.nvim',
     },
+    {
+        'mbbill/undotree'
+    },
+    {
+        'microsoft/java-debug',
+        dependencies = { 'mfussenegger/nvim-dap' }
+    }
 })

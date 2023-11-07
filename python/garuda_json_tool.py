@@ -8,7 +8,7 @@ def write_into(data):
 def read_from():
     with open('.config/nvim/garuda.json', 'r') as json_file:
         return json.load(json_file)
-
+    
 def create_folder():
     data = read_from()
     data[str(sys.argv[2])] = {}
@@ -27,7 +27,18 @@ def insert_new_bookmark():
     write_into(data)
 
 def collect_bookmarks():
-    return ''
+    data = read_from()
+    final_list = ''
+
+    for folder in data.keys():
+        final_list += folder
+
+        for key, value in data[folder].items():
+            final_list += "!" + key + ":" + value
+
+        final_list += "|"
+
+    print(final_list)
 
 def delete_bookmarks():
     return ''
