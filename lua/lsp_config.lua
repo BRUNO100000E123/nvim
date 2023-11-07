@@ -20,6 +20,7 @@ lsp_config.lemminx.setup({capabilities = capabilities,})
 lsp_config.biome.setup({capabilities = capabilities,})
 lsp_config.pyright.setup({capabilities = capabilities,})
 lsp_config.volar.setup({capabilities = capabilities,})
+lsp_config.clangd.setup({capabilities = capabilities,})
 
 local workspace_dir = vim.fn.stdpath('data') .. '/site/java/workspace-root/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 os.execute("mkdir " .. workspace_dir)

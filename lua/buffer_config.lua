@@ -159,10 +159,12 @@ function Reload_window_buffers_view()
 
         if path ~= nil and path ~= '' then
 
-            path = vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"')
-
+            -- if path ~= nil then
+            --     table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"'):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
+            -- end
+            
             if path ~= nil then
-                table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"'):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
+                table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('/home/bruno/.config/nvim/cpp/a.out ' .. path):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
             end
 
         end
