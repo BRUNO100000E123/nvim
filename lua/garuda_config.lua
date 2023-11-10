@@ -1,21 +1,16 @@
+require('functions')
+
 Buffer_view_bookmarks_list = nil
-Bookmarks_in_memory = {}
-Connection_of_nicknames_and_paths = {}
+Bookmarks_folders = {}
+Bookmarks_connections = {}
+Bookmarks_files = {}
+Path = ''
 
-function Split(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        table.insert(t, str)
-    end
-    return t
-end
-
-vim.api.nvim_set_keymap('n', 'dsa', ':lua Open_window_bookmarks_view()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'tp', ':lua Open_window_bookmarks_view()<CR>', {noremap = true, silent = true})
 
 function Open_window_bookmarks_view()
+
+    Path = vim.fn.expand('%:p')
 
     if Buffer_view_bookmarks_list == nil then
 
@@ -24,11 +19,14 @@ function Open_window_bookmarks_view()
         vim.api.nvim_buf_set_name(Buffer_view_bookmarks_list, "book_marks")
 
         -- vim.api.nvim_buf_set_keymap(Buffer, 'n', 'll', ':q!<CR>', { noremap = true, silent = true })
-        -- vim.api.nvim_buf_set_keymap(Buffer, 'n', '<C-w>', ':q!<CR>', { noremap = true, silent = true })
-        -- vim.api.nvim_buf_set_keymap(Buffer, 'n', 'dd', ':lua Delete_buffer()<CR>', { noremap = true, silent = true })
-        -- vim.api.nvim_buf_set_keymap(Buffer, 'n', 'hh', ':lua Open_buffer()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_bookmarks_list, 'n', 'af', ':lua Add_new_folder()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_bookmarks_list, 'n', 'ab', ':lua Add_new_bookmark()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(Buffer_view_bookmarks_list, 'n', 'h', ':lua Open()<CR>', { noremap = true, silent = true }) 
+        vim.api.nvim_buf_set_keymap(Buffer_view_bookmarks_list, 'n', 'tp', ':q!<CR>', { noremap = true, silent = true })
 
     end
+
+    Collect_bookmarks()
 
     Reload_bookmarks_view()
 
@@ -45,25 +43,51 @@ function Open_window_bookmarks_view()
 
 end
 
-function Print_the_table()
+function Collect_bookmarks()
 
-    for key, value in pairs(Connection_of_nicknames_and_paths) do
+    Bookmarks_folders = {}
+    Bookmarks_connections = {}
+    Bookmarks_files = {}
 
-        print('Size Bigger Dict: ' .. tostring(#Connection_of_nicknames_and_paths))
+    local file = io.open('/home/bruno/.config/nvim/garuda.txt', 'r')
 
-        print('Size Inner Dict: ' .. #value)
+    local data = ''
 
-        for t1, t2 in pairs(value) do
+    if file ~= nil then
 
-            print('|t1: ' .. t1 .. ' |')
+        data = file:read('*a')
 
-            print('|t2: ' .. t2 .. ' |')
+        file:close()
 
-            for d1, d2 in pairs(value[t1]) do
+    end
 
-                print('|d1: ' .. d1 .. '|')
+    local folders = Split(data, ',')
+
+    for index, folder in ipairs(folders) do
+
+        local clean_folder = folder:gsub('\n', '')
+
+        if clean_folder ~= nil and clean_folder ~= '' then
+
+            local folder_data = Split(clean_folder, '=')
+
+            local folder_name = folder_data[1]
+
+            table.insert(Bookmarks_folders, folder_name)
+
+            table.insert(Bookmarks_connections, false)
+
+            local files_list = {}
+
+            for lindex, nicknames_and_paths in ipairs(Split(folder_data[2], '|')) do
+
+                local name_and_path = Split(nicknames_and_paths, ':')
+
+                table.insert(files_list, {name_and_path[1], name_and_path[2]})
 
             end
+
+            table.insert(Bookmarks_files, files_list)
 
         end
 
@@ -78,49 +102,144 @@ function Reload_bookmarks_view()
         '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
     }
 
-    local files = Split(Collect_bookmarks(), '|')
+    for index, folder in ipairs(Bookmarks_folders) do
 
-    for i, info in ipairs(files) do
+        table.insert(Bookmarks_in_memory, (' ' .. tostring(index) .. ': ' .. folder))
 
-        if i < #files then
+        local file = Bookmarks_files[index]
 
-            local temporary_dict = {}
+        if Bookmarks_connections[index] then
 
-            local folder_name = ''
+            for i, data in ipairs(file) do
 
-            for l, item in ipairs(Split(info, '!')) do
-
-                if l == 1 then
-
-                    folder_name = item
-
-                    table.insert(Bookmarks_in_memory, folder_name)
-
-                    temporary_dict[folder_name] = {}
-
-                else
-
-                    local key, value = Split(item, ':')
-
-                    temporary_dict[folder_name][key] = value
-
-                end
+                table.insert(Bookmarks_in_memory, (' ╰' .. tostring(index) .. '.' .. tostring(i) .. ': ' .. file[i][1]))
 
             end
 
-            for key, value in pairs(temporary_dict[folder_name]) do
+        end
 
-                print('|KEY: ' .. key .. ' |VALUE: ' .. value .. ' |')
 
-            end
+    end
 
-            table.insert(Connection_of_nicknames_and_paths, temporary_dict)
+    vim.api.nvim_buf_set_lines(Buffer_view_bookmarks_list, 0, -1, false, Bookmarks_in_memory)
+
+end
+
+function Find_folder()
+
+    local line_number = vim.fn.line(".")
+
+    local line = vim.api.nvim_buf_get_lines(vim.fn.bufnr('%'), line_number - 1, line_number, false)[1]
+
+    if string.find(line, '╰') then
+
+        return tonumber(Split(Split(line, ':')[1]:gsub('╰', ''), '.')[1])
+
+    else
+
+        return tonumber(Split(line, ':')[1])
+
+    end
+
+end
+
+function Open()
+
+    local line_number = vim.fn.line(".")
+
+    local line = vim.api.nvim_buf_get_lines(vim.fn.bufnr('%'), line_number - 1, line_number, false)[1]
+
+    if string.find(line, '╰') then
+
+        local locations = Split(Split(line, ':')[1]:gsub('╰', ''), '.')
+
+        Path_global = Bookmarks_files[tonumber(locations[1])][tonumber(locations[2])][2]
+
+        vim.cmd('e ' .. Path_global)
+
+    else
+
+        local folder_id = tonumber(Split(line, ':')[1])
+
+        if folder_id ~= nil then
+
+            Bookmarks_connections[folder_id] = not Bookmarks_connections[folder_id]
+
+            Reload_bookmarks_view()
 
         end
 
     end
 
-    vim.api.nvim_buf_set_lines(Buffer_view_bookmarks_list, 0, -1, false, Bookmarks_in_memory)
+end
+
+function Add_new_bookmark()
+
+    local file = io.open('/home/bruno/.config/nvim/garuda.txt', 'r')
+
+    local target_line = Find_folder()
+
+    local lines = {}
+
+    if file ~= nil then
+
+        for line in file:lines() do
+
+            local clean_line = line:gsub('\n', '')
+
+            local clean_line = clean_line:gsub(',', '')
+
+            table.insert(lines, clean_line)
+
+        end
+
+        file:close()
+
+    end
+
+    file = io.open('/home/bruno/.config/nvim/garuda.txt', 'w')
+
+    if file ~= nil then
+
+        file:close()
+
+    end
+
+    local dir = '/'
+
+    local split_path = Split(Path, '/');
+
+    for index, name in ipairs(split_path) do
+
+        if name ~= nil and index < #split_path then 
+
+            dir = dir .. name .. '/'
+
+        end
+
+    end
+
+    local line_to_be_modified = lines[target_line] .. vim.fn.input("Choose a Nickname For This Bookmark: ") .. ':' .. dir .. '|'
+
+    lines[target_line] = line_to_be_modified
+
+    file = io.open('/home/bruno/.config/nvim/garuda.txt', 'w')
+
+    if file ~= nil then
+
+        for index, line in ipairs(lines) do
+
+            local final_line = line .. ',\n'
+
+            file:write(final_line)
+
+        end
+
+        file:close()
+
+    end
+
+    Collect_bookmarks()
 
 end
 
@@ -138,45 +257,3 @@ vim.api.nvim_create_autocmd('BufEnter',
         command = 'lua Reload_window_bookmarks_view()'
     }
 )
-
-function Collect_bookmarks()
-    local script = 'python3 /home/bruno/.config/nvim/python/garuda_json_tool.py "1"'
-    local output = vim.fn.system(script)
-    return output
-end
-
-function Create_folder()
-    local user_input = vim.fn.input('Folder Name: ')
-    local script = 'python3 /home/bruno/.config/nvim/python/garuda_json_tool.py "5" "' .. user_input .. '"'
-    local output = vim.fn.system(script)
-    vim.api.nvim_out_write(output)
-end
-
-function Update_folder()
-    local user_input = vim.fn.input('Choose A New Name: ')
-    local folder_name = 'TEST'
-    local script = 'python3 /home/bruno/.config/nvim/python/garuda_json_tool.py "7"  "' .. folder_name .. '" "' .. user_input .. '"'
-    local output = vim.fn.system(script)
-    vim.api.nvim_out_write(output)
-end
-
-function Insert_new_bookmark()
-    local user_input = vim.fn.input('Choose A Name For The Bookmark: ')
-    local folder_name = 'Kart'
-    local path = '/caminho/.pathzao'
-    local script = 'python3 /home/bruno/.config/nvim/python/garuda_json_tool.py "4"  "' .. folder_name .. '" "' .. user_input .. '" "' .. path .. '"'
-    local output = vim.fn.system(script)
-    vim.api.nvim_out_write(output)
-end
---
--- vim.api.nvim_set_keymap('n', 'asd', ':lua Create_folder()<CR>', {noremap = true, silent = true})
--- 1 -> Collect Stuff To Be Shown
--- 2 -> Delete Item From Folder
--- 3 -> Move Folders
--- 6 -> Delete Folder
---
--- DONE
---
--- 4 -> Insert New BookMarks (Id, Folder, BookMark's Nickname, Path)
--- 5 -> Insert New Folders (Id, Name)
--- 7 -> Update Folder (id, Old Name, New Name)

@@ -1,5 +1,23 @@
 local telescope = require('telescope.builtin')
 
+Path_global = '/home/bruno/dev/java/link-dev/microservicos/'
+
+function Split(inputstr, sep)
+
+    if sep == nil then
+        sep = "%s"
+    end
+
+    local t = {}
+
+    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+        table.insert(t, str)
+    end
+
+    return t
+
+end
+
 function Find_files_local()
 
     local name = vim.api.nvim_buf_get_name(0)
@@ -9,14 +27,13 @@ function Find_files_local()
         Path_global = '/home/bruno/dev/java/link-dev/microservicos/' .. string.match(name, '/home/bruno/dev/java/link%-dev/microservicos/((%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?))') .. '/'
 
     end
+
     telescope.find_files({
         prompt_title = 'files',
         cwd = Path_global
     })
 
 end
-
-Path_global = '/home/bruno/dev/java/link-dev/microservicos/'
 
 function Diagnostics_status_bar()
 
@@ -80,7 +97,7 @@ function Find_name(microservice_name)
 end
 
 function Push()
-    
+
     local path = vim.api.nvim_buf_get_name(0)
 
     if string.find(path, 'microservicos') then
@@ -91,8 +108,9 @@ function Push()
         if(application_name ~= nil) then
 
             vim.cmd('cd /home/bruno/dev/java/link-dev/microservicos/' .. microservice_name .. '/')
-            vim.cmd('vsplit')
-            vim.cmd('vertical resize -60')
+            vim.cmd('split')
+            vim.cmd('wincmd j')
+            vim.cmd('resize 25')
             vim.cmd(
                 'term ./mvnw clean install -DskipTests ' ..
                 '&& cd ' .. microservice_name .. '-server ' ..
@@ -119,8 +137,9 @@ function Build()
         if(application_name ~= nil) then
 
             vim.cmd('cd /home/bruno/dev/java/link-dev/microservicos/' .. microservice_name .. '/')
-            vim.cmd('vsplit')
-            vim.cmd('vertical resize -60')
+            vim.cmd('split')
+            vim.cmd('wincmd j')
+            vim.cmd('resize 25')
             vim.cmd(
                 'term if [ -n "$(docker images -q ' .. application_name .. ')" ]; then ' ..
                 'docker rmi $(docker images -q ' .. application_name .. ') --force; ' ..
@@ -143,15 +162,16 @@ function Run_dev()
 
     if string.find(path, 'microservicos') and string.find(path, 'server') then
 
-        vim.cmd('vsplit')
-        vim.cmd('vertical resize -60')
+        vim.cmd('split')
+        vim.cmd('wincmd j')
+        vim.cmd('resize 25')
 
         local name = string.match(path, '/home/bruno/dev/java/link%-dev/microservicos/((%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*))')
 
         local finalPath = 'term java -jar /home/bruno/dev/java/link-dev/microservicos/' .. name .. '/' .. name .. '-server/target/'
 
         for _, file in ipairs(vim.fn.readdir('/home/bruno/dev/java/link-dev/microservicos/' .. name .. '/' .. name .. '-server/target/')) do
-            
+
             if(string.match(file, '.jar') and not(string.match(file, '.original'))) then
 
                 finalPath = finalPath .. string.match(file, '(.*)')
@@ -167,36 +187,19 @@ function Run_dev()
 end
 
 function Mvnw()
-    
+
     local name = vim.api.nvim_buf_get_name(0)
 
     if string.find(name, 'microservicos') then
-        
+
         vim.cmd('cd /home/bruno/dev/java/link-dev/microservicos/' .. string.match(name, '/home/bruno/dev/java/link%-dev/microservicos/((%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?)(%w*)(%-?))') .. '/')
-        vim.cmd('vsplit')
-        vim.cmd('vertical resize -60')
+        vim.cmd('split')
+        vim.cmd('wincmd j')
+        vim.cmd('resize 25')
         vim.cmd('term ./mvnw clean install -DskipTests && exit')
 
     end
 
-end
-
-function LocalCommit()
-    local commitMessage = vim.fn.input("Commit Message: ")
-    print' '
-    print'Are You Sure ?' 
-    print'(1) Yes | (2) No'
-    local commitVerification = vim.fn.input("Answer: ") == '1' and true or false
-    if commitVerification then
-        local path = vim.api.nvim_buf_get_name(0)    
-        if path ~= nil then      
-            -- vim.fn.termopen('svn commit -m ' .. ' "' .. commitMessage .. '" '  .. path)
-        end
-        print'Success'
-    else 
-        print' '
-        print'Failure'
-    end
 end
 
 function MicroservicesTree()

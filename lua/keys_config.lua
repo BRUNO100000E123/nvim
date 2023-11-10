@@ -53,7 +53,8 @@ vim.api.nvim_set_keymap('n', 'l', '<Right>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'ct', ':lcd %:p:h<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'cb', ':lct<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'ter', ':terminal<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', 'qt', ':q!<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'qt', ':wq!<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'qq', ':q!<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'nn', ':lua LocalTree()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'nb', ':lua ConfigTree()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'nm', ':lua MicroservicesTree()<CR>', {noremap = true, silent = true})
@@ -70,7 +71,7 @@ vim.api.nvim_set_keymap('n', 'mvnw', ':lua Mvnw()<CR>', {noremap = true, silent 
 vim.api.nvim_set_keymap('n', 'run', ':lua Run_dev()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'build', ':lua Build()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', 'push', ':lua Push()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<C-p>', ':UndotreeToggle<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-p>', ':UndotreeToggle<CR><Tab>', {noremap = true, silent = true})
 
 --LEADER STUFF   
 vim.api.nvim_set_keymap('n', '<leader>l', ':Lazy<CR>', {noremap = true, silent = true})

@@ -1,12 +1,14 @@
+require('functions')
+
 Buffer_view_buffer_list = nil
 Buffers_in_memory = {}
 
-vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-w>', ':lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-a>', ':lua Cycle_behind()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-d>', ':lua Cycle_ahead()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>:lua Cycle_behind()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', '<C-d>', '<Esc>:lua Cycle_ahead()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window_buffers_view()<CR>i', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>:lua Cycle_behind()<CR>i', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-d>', '<Esc>:lua Cycle_ahead()<CR>i', {noremap = true, silent = true})
 
 function Cycle_behind()
 
@@ -76,7 +78,7 @@ end
 
 function Delete_buffer()
 
-    vim.cmd(':bdelete ' .. Chosen_buffer())
+    vim.cmd(':bdelete! ' .. Chosen_buffer())
 
     Reload_window_buffers_view()
 
@@ -159,12 +161,10 @@ function Reload_window_buffers_view()
 
         if path ~= nil and path ~= '' then
 
-            -- if path ~= nil then
-            --     table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('python3 /home/bruno/.config/nvim/python/utils.py "' .. path .. '"'):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
-            -- end
-            
+            local nome = Split(path, '/')
+
             if path ~= nil then
-                table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. vim.fn.system('/home/bruno/.config/nvim/cpp/a.out ' .. path):gsub('\n', '') .. ' : ' .. Diagnostics_buffer(info.bufnr)))
+                table.insert(Buffers_in_memory, (' ' .. info.bufnr .. ' : ' .. nome[#nome] .. ' : ' .. Diagnostics_buffer(info.bufnr)))
             end
 
         end

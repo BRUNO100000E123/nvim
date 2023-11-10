@@ -10,7 +10,7 @@ require('telescope').setup({
                 ["ss"] = actions.preview_scrolling_down
             },
         }
-    }, 
+    },
     project = {
         base_dirs = { '/home/bruno/dev/java/link-dev/microservicos/', '/home/bruno/.config/nvim/' }
     }

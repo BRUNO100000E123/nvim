@@ -56,9 +56,6 @@ require("lazy").setup({
         'Yggdroot/indentLine'
     },
     {
-        'numToStr/Comment.nvim',
-    },
-    {
         'mbbill/undotree'
     },
     {
