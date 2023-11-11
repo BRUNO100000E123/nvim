@@ -6,7 +6,7 @@ Buffers_in_memory = {}
 vim.api.nvim_set_keymap('n', '<C-w>', ':lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-a>', ':lua Cycle_behind()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-d>', ':lua Cycle_ahead()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window_buffers_view()<CR>i', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('i', '<C-w>', '<Esc>:lua Open_window_buffers_view()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>:lua Cycle_behind()<CR>i', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('i', '<C-d>', '<Esc>:lua Cycle_ahead()<CR>i', {noremap = true, silent = true})
 
@@ -181,6 +181,7 @@ function Recolor_window_buffers_view()
     vim.cmd('highlight CustomChar guifg=#7fcbd7')
     vim.cmd('syntax match CustomChar /./')
     vim.cmd('highlight link CustomChar SpecialChar')
+    vim.cmd('hi FloatBorder guifg=#7fcbd7 ctermbg=235')
 end
 
 vim.api.nvim_create_autocmd('BufEnter',{pattern = 'buffers_view', command = 'lua Recolor_window_buffers_view()'})

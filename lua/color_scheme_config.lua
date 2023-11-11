@@ -4,10 +4,10 @@ require("tokyonight").setup({
     transparent = 'true', -- Enable this to disable setting the background color
     terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
     styles = { 
-        comments = { fg = '#adadad', italic = true },
-        keywords = { italic = true },
-        functions = {},
-        variables = {}, 
+        comments = { fg = '#adadad', italic = true, bold=true },
+        keywords = { italic = true, bold=true },
+        functions = { bold=true },
+        variables = { fg = '#ff8c00', bold=true },
 	background = 'transparent',
         sidebars = "dark", -- style for sidebars, see below
         floats = "transparent", -- style for floating windows

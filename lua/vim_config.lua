@@ -52,3 +52,10 @@ vim.api.nvim_create_autocmd('BufEnter',
         command = 'highlight CursorLine guifg=#e3ff00 guibg=#1C00FF'
     }
 )
+
+vim.cmd('highlight Number guifg=#90ee90')
+vim.cmd('highlight Boolean guifg=#90ee90')
+vim.cmd('highlight Float guifg=#90ee90')
+vim.cmd('highlight Constant guifg=#90ee90')
+vim.cmd('highlight String guifg=#90ee90')
+vim.cmd('highlight Type guifg=#48d1cc')

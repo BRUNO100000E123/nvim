@@ -249,6 +249,7 @@ function Reload_window_bookmarks_view()
     vim.cmd('highlight CustomChar guifg=#7fcbd7')
     vim.cmd('syntax match CustomChar /./')
     vim.cmd('highlight link CustomChar SpecialChar')
+    vim.cmd('hi FloatBorder guifg=#7fcbd7 ctermbg=235')
 end
 
 vim.api.nvim_create_autocmd('BufEnter',
