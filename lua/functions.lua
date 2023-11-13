@@ -62,7 +62,7 @@ function Diagnostics_status_bar()
         end
     end
 
-    vim.opt.statusline = '%-5{%v:lua.string.upper(v:lua.vim.fn.mode())%}%5([%l/%L%)]%5p%%%=%y ' .. tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️  ' .. tostring(informations) .. '   ' .. tostring(hints) .. '💡  '  .. '  %-.30t'
+    return (tostring(errors) .. '‼️  ' .. tostring(warnings) .. '⚠️  ' .. tostring(informations) .. '   ' .. tostring(hints) .. '💡')
 
 end
 
@@ -79,11 +79,11 @@ function Find_name(microservice_name)
     if file ~= nil then
 
         for line in file:lines() do
- 
+
             if string.match(line, '[^zqwsxcdrfvbgtyhjuiklop]name: ') then 
 
                 return string.match(line, 'name: (.*)')
-                
+
             end
 
         end

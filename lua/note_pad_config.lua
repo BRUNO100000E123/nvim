@@ -3,7 +3,7 @@ require('functions')
 vim.api.nvim_set_keymap('n', 'asd', '<Esc>:lua Open_window_note_pad()<CR>i', {noremap = true, silent = true})
 
 Buffer_view_note_pad = nil
-local path = '/home/bruno/.config/nvim/note_pad.txt'
+local path = '/home/bruno/.config/nvim/.note_pad.txt'
 
 function Open_window_note_pad()
 
@@ -15,17 +15,16 @@ function Open_window_note_pad()
 
     vim.api.nvim_buf_set_lines(Buffer_view_note_pad, 0, -1, false, Load_file())
 
-    local window_width, window_height = 150, 50
-
     local screen_width, screen_height = vim.fn.winwidth(0), vim.fn.winheight(0)
+    local x_location, y_location = math.floor(screen_width / 4), math.floor((screen_height * 0.2))
+    local window_width, window_height = math.floor(screen_width / 2), math.floor((screen_height * 0.6))
 
     vim.api.nvim_open_win(Buffer_view_note_pad, true, {
         relative = 'editor',
-       -- anchor = 'NE',
-        width = 155,
-        height = 50,
-        row = 14,
-        col = 81,
+        width = window_width,
+        height = window_height,
+        row = y_location,
+        col = x_location,
         focusable = true,
         border =  { '@', "=" ,'@', "|", '@', '=', '@', '|'},
     })

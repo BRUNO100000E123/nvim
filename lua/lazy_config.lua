@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     {
         "folke/tokyonight.nvim",
-        'morhetz/gruvbox'
     },
     {
         'nvim-telescope/telescope.nvim',
